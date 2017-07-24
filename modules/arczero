@@ -20,8 +20,6 @@ but should be beneficial overall.
 import os, sys, subprocess
 import json
 
-import click 
-
 #The global VERSION variable is required for proper 
 #ebuild slotting behavior on *too systems. Failure
 #to set the VERSION variable to the correct value
@@ -39,13 +37,36 @@ MODULEID = "arcana-module-zero"
 #Portage-specific values that should be useful
 
 SLOT = "9999"
-SUBSLOT = "" 
+SUBSLOT = "-1" 
 
-@click.command() 
-@click.option('--version', help="Output an int matching the development version of the module")
-@click.option('-v', help="Output an int matching the development version of the module")
 def version():
     """Output an int matching the development version of the module"""
-    click.echo("%s version %s" % MODULEID, VERSION)
+    print("{} version {}".format(MODULEID, VERSION))
 
-if __name == __main__: 
+def fullversion():
+    version()
+    print("SLOT: {}".format(SLOT))
+    print("SUBSLOT: {}".format(SUBSLOT))
+
+cli_mapping = {
+    "version" : [version, "-v", "--version", "version"],
+    "fullversion" : [fullversion, "-vv", "--fullversion", "fullversion"],
+}
+
+def help():
+    for function in cli_mapping.keys():
+        print(cli_mapping[function])
+
+def main():
+    if len(sys.argv) == 1:
+        help()
+        sys.exit(1)
+    else:
+        for func in cli_mapping.keys():
+            for altopt in range(1, len(cli_mapping[func]) ):
+                if sys.argv[1] == cli_mapping[func][altopt]:
+                    cli_mapping[func][0]()
+                    sys.exit(1)
+
+if __name__ == "__main__":
+    main()
