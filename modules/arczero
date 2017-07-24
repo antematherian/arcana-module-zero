@@ -1,3 +1,51 @@
 #!/usr/bin/python3
+"""
+Arcana is an automated sanity-checking tool for Funtoo
+based distributions. 
 
-print("Hello World")
+The aim of this module (module zero) is to run sanity
+checks against the Funtoo portage tree.
+
+The development version aims to work with the latest
+development implementation of the Funtoo portage tree.
+
+Specific slots will deal with different versions of
+the portage tree: if the Funtoo portage tree changes
+in a major way, this will be reflected by a slot update
+
+Subslots will be used to tune the module behavior 
+that might not be compatible with external scripts,
+but should be beneficial overall. 
+"""
+import os, sys, subprocess
+import json
+
+import click 
+
+#The global VERSION variable is required for proper 
+#ebuild slotting behavior on *too systems. Failure
+#to set the VERSION variable to the correct value
+#referenced by the ebuild merging the forked branch
+#will cause unexpected behavior. Don't mess this up.
+
+VERSION = "9999"
+
+#The below value of MODULEID should match the ${PN} 
+#of the ebuild merging this module. Failure to set
+#this correctly will result in unexpected behavior.
+
+MODULEID = "arcana-module-zero"
+
+#Portage-specific values that should be useful
+
+SLOT = "9999"
+SUBSLOT = "" 
+
+@click.command() 
+@click.option('--version', help="Output an int matching the development version of the module")
+@click.option('-v', help="Output an int matching the development version of the module")
+def version():
+    """Output an int matching the development version of the module"""
+    click.echo("%s version %s" % MODULEID, VERSION)
+
+if __name == __main__: 
